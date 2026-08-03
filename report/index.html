@@ -267,7 +267,12 @@ body {
 }
 .btn-primary:hover { background: var(--accent-hover); color: white; }
 
-@media (max-width: 768px) {
+.btn-download {
+  background: #059669; color: white; border-color: #059669;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-download:hover { background: #047857; color: white; border-color: #047857; }
+.btn-download svg { flex-shrink: 0; }
   #sidebar { transform: translateX(-100%); }
   #main { margin-left: 0; }
   .bento-grid { grid-template-columns: 1fr; }
@@ -310,7 +315,13 @@ body {
 <div id="main">
   <header id="topbar">
     <div class="breadcrumb">Report / <span id="breadcrumb-text">Dashboard</span></div>
-    <button class="btn" onclick="window.print()">Export PDF</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-download" onclick="downloadAllChapters()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Report
+      </button>
+      <button class="btn" onclick="window.print()">Export PDF</button>
+    </div>
   </header>
 
   <main id="content">
@@ -381,6 +392,10 @@ body {
           <p id="md-subtitle">Subtitle</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-download" id="btn-download-ch" onclick="downloadChapter()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Chapter
+          </button>
           <button class="btn" id="btn-edit" onclick="toggleEdit()">Edit Markdown</button>
           <button class="btn btn-primary" id="btn-save" onclick="saveChanges()" style="display:none">Save Changes</button>
           <button class="btn" onclick="showHome()">Close</button>
@@ -492,6 +507,34 @@ function navigate(dir) {
   if (currentChapter + dir >= 0 && currentChapter + dir < chapters.length) {
     loadChapter(currentChapter + dir);
   }
+}
+
+function downloadChapter() {
+  if (currentChapter < 0 || !currentMarkdown) return;
+  const ch = chapters[currentChapter];
+  const blob = new Blob([currentMarkdown], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ch.file;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function downloadAllChapters() {
+  let fullReport = `# AI-Based Social Media Sentiment and Trend Analysis Platform\nCapstone Project — Batch 220 | Academic Year 2026–27\n\n`;
+  for (const ch of chapters) {
+    try {
+      const r = await fetch(ch.file);
+      const text = await r.text();
+      fullReport += `\n\n---\n\n` + text;
+    } catch(e) { /* skip */ }
+  }
+  const blob = new Blob([fullReport], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Capstone_Report_Batch220_Full.md';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function toggleEdit() {
