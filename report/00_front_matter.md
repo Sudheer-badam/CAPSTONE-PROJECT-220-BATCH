@@ -150,6 +150,26 @@ Finally, we express deep gratitude to our families for their constant encouragem
 
 # ABSTRACT
 
+**Project Title:** AI-Based Social Media Sentiment and Trend Analysis Platform
+
+**Submitted by:**
+
+| Student Name | Roll Number |
+| :--- | :--- |
+| KOKKILIGADDA TULASI VENKATA DURGA | 2300032267 |
+| BADAM SUDHEER REDDY | 2300033278 |
+| GARIKAPATI SATYA KARTHIKA | 2300030988 |
+| MITTA KAVYA NAYANA | 2300033848 |
+| INTI HANITHA SAI GAYATHRI | 2300032512 |
+
+**Guide:** Mr. M. Subba Rao, Assistant Professor, Dept. of CSE, KL University
+
+**Department:** Computer Science and Engineering — KL University (Koneru Lakshmaiah Education Foundation)
+
+**Academic Year:** 2024–2025
+
+---
+
 Social media platforms have evolved from simple communication channels into rich repositories of public sentiment, opinion, and discourse. Every day, millions of users share their thoughts on brands, political events, entertainment, products, and social issues across platforms such as X (formerly Twitter) and Reddit. For businesses, researchers, and policymakers, the ability to systematically monitor and interpret this data represents a significant competitive and analytical advantage. Manual analysis of such volumes of data is neither practical nor scalable, which creates a clear need for automated, intelligent systems capable of processing and understanding the sentiment embedded in social media text.
 
 This project presents the design, development, and evaluation of an **AI-Based Social Media Sentiment and Trend Analysis Platform** — a full-stack web application that automatically collects social media data from public APIs, processes it using established natural language processing pipelines, classifies the sentiment of individual posts as Positive, Negative, or Neutral, identifies trending topics and keywords, and presents the analytical outputs through an interactive, browser-based dashboard.
