@@ -114,7 +114,7 @@ body {
   height: 64px;
   background: var(--bg-page);
   border-bottom: 1px solid var(--border-light);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: flex-start; gap: 24px;
   padding: 0 40px;
   position: sticky; top: 0; z-index: 50;
   backdrop-filter: blur(8px); background: rgba(249, 250, 251, 0.85);
@@ -191,7 +191,7 @@ body {
 }
 #md-header {
   margin-bottom: 40px;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
 }
 #md-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
 #md-header p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
@@ -387,8 +387,8 @@ body {
 
     <!-- MARKDOWN VIEW -->
     <div id="md-view">
-      <div id="md-header" style="align-items: flex-start;">
-        <div style="display:flex; align-items:flex-start; gap:16px; flex:1;">
+      <div id="md-header">
+        <div style="display:flex; align-items:flex-start; gap:16px;">
           <button class="btn" onclick="showHome()" style="padding: 8px 12px; margin-top:2px;">← Back</button>
           <div>
             <h2 id="md-title">Title</h2>
