@@ -17,11 +17,11 @@
 
 | Student Name | Roll Number |
 | :--- | :--- |
-| **KOKKILIGADDA TULASI VENKATA DURGA** | **23300332267** |
-| **BADAM SUDHEER REDDY** | **23300332278** |
-| **GARIKAPATI SATYA KARTHIKA** | **23300330968** |
-| **MITTA KAVYA NAYANA** | **23300338848** |
-| **INTI HANITHA SAI GAYATHRI** | **23300332512** |
+| **KOKKILIGADDA TULASI VENKATA DURGA** | **2300032267** |
+| **BADAM SUDHEER REDDY** | **2300033278** |
+| **GARIKAPATI SATYA KARTHIKA** | **2300030988** |
+| **MITTA KAVYA NAYANA** | **2300033848** |
+| **INTI HANITHA SAI GAYATHRI** | **2300032512** |
 
 **Department of Computer Science and Engineering**
 **KL University, Koneru Lakshmaiah Education Foundation**
@@ -51,7 +51,7 @@
 
 # CERTIFICATE
 
-This is to certify that the project report entitled **"AI-Based Social Media Sentiment and Trend Analysis Platform"** submitted by **KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 23300332267), **BADAM SUDHEER REDDY** (Roll No.: 23300332278), **GARIKAPATI SATYA KARTHIKA** (Roll No.: 23300330968), **MITTA KAVYA NAYANA** (Roll No.: 23300338848), and **INTI HANITHA SAI GAYATHRI** (Roll No.: 23300332512), in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering** from **KL University (Koneru Lakshmaiah Education Foundation)**, is a record of bonafide work carried out under my supervision and guidance during the academic year 2024–2025.
+This is to certify that the project report entitled **"AI-Based Social Media Sentiment and Trend Analysis Platform"** submitted by **KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 2300032267), **BADAM SUDHEER REDDY** (Roll No.: 2300033278), **GARIKAPATI SATYA KARTHIKA** (Roll No.: 2300030988), **MITTA KAVYA NAYANA** (Roll No.: 2300033848), and **INTI HANITHA SAI GAYATHRI** (Roll No.: 2300032512), in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering** from **KL University (Koneru Lakshmaiah Education Foundation)**, is a record of bonafide work carried out under my supervision and guidance during the academic year 2024–2025.
 
 The project work described in this report is original and has not been submitted elsewhere for the award of any other degree or diploma.
 
@@ -103,11 +103,11 @@ All sources of information, references, and literature used in this project have
 
 ---
 
-**KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 23300332267)  
-**BADAM SUDHEER REDDY** (Roll No.: 23300332278)  
-**GARIKAPATI SATYA KARTHIKA** (Roll No.: 23300330968)  
-**MITTA KAVYA NAYANA** (Roll No.: 23300338848)  
-**INTI HANITHA SAI GAYATHRI** (Roll No.: 23300332512)  
+**KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 2300032267)  
+**BADAM SUDHEER REDDY** (Roll No.: 2300033278)  
+**GARIKAPATI SATYA KARTHIKA** (Roll No.: 2300030988)  
+**MITTA KAVYA NAYANA** (Roll No.: 2300033848)  
+**INTI HANITHA SAI GAYATHRI** (Roll No.: 2300032512)  
 
 Department of CSE  
 KL University
@@ -138,11 +138,11 @@ Finally, we express deep gratitude to our families for their constant encouragem
 
 ---
 
-**KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 23300332267)  
-**BADAM SUDHEER REDDY** (Roll No.: 23300332278)  
-**GARIKAPATI SATYA KARTHIKA** (Roll No.: 23300330968)  
-**MITTA KAVYA NAYANA** (Roll No.: 23300338848)  
-**INTI HANITHA SAI GAYATHRI** (Roll No.: 23300332512)
+**KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 2300032267)  
+**BADAM SUDHEER REDDY** (Roll No.: 2300033278)  
+**GARIKAPATI SATYA KARTHIKA** (Roll No.: 2300030988)  
+**MITTA KAVYA NAYANA** (Roll No.: 2300033848)  
+**INTI HANITHA SAI GAYATHRI** (Roll No.: 2300032512)
 
 ---
 
