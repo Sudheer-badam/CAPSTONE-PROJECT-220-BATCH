@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI Sentiment Analysis — Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css"/>
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg-page: #F9FAFB;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --bg-hover: #F3F4F6;
+  --bg-active: #EEF2FF;
+  
+  --border-light: #E5E7EB;
+  --border-medium: #D1D5DB;
+  
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-tertiary: #9CA3AF;
+  
+  --accent-primary: #4F46E5;
+  --accent-hover: #4338CA;
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  
+  --sidebar-w: 260px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  display: flex;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 32px 24px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent-primary);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px;
+}
+.logo-text h1 { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+.logo-text p { font-size: 12px; color: var(--text-tertiary); }
+
+#sidebar nav { padding: 0 16px; flex: 1; }
+.nav-section {
+  padding: 16px 12px 8px;
+  font-size: 11px; font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; margin-bottom: 4px;
+  cursor: pointer; transition: all 0.2s;
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.nav-item.active { background: var(--bg-active); color: var(--accent-primary); font-weight: 600; }
+.nav-item .icon { font-size: 16px; opacity: 0.5; }
+.nav-item.active .icon { opacity: 1; }
+
+/* ── MAIN CONTENT ── */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#topbar {
+  height: 64px;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(8px); background: rgba(249, 250, 251, 0.85);
+}
+.breadcrumb { font-size: 13px; font-weight: 500; color: var(--text-tertiary); }
+.breadcrumb span { color: var(--text-primary); }
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--border-light); background: var(--bg-surface);
+  color: var(--text-primary); transition: all 0.2s;
+}
+.btn:hover { border-color: var(--border-medium); background: var(--bg-hover); }
+
+#content {
+  padding: 48px 40px 80px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── BENTO OVERVIEW (HOME) ── */
+#home-view { display: block; }
+.bento-header { margin-bottom: 32px; }
+.bento-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+.bento-header p { font-size: 15px; color: var(--text-secondary); max-width: 600px; line-height: 1.6; }
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.bento-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: flex; flex-direction: column;
+}
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-primary);
+}
+.bento-card.large { grid-column: span 2; }
+.bento-card.full { grid-column: 1 / -1; }
+
+.card-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--bg-hover); display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 16px; transition: background 0.2s;
+}
+.bento-card:hover .card-icon { background: var(--bg-active); }
+.bento-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.bento-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; }
+.card-meta {
+  margin-top: 16px; font-size: 11px; font-weight: 600;
+  color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* ── MARKDOWN VIEW ── */
+#md-view { display: none; }
+#md-body {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 60px 80px;
+  box-shadow: var(--shadow-sm);
+}
+#md-header {
+  margin-bottom: 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+#md-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+#md-header p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+
+/* MARKDOWN TYPOGRAPHY */
+.md-content { font-size: 15px; line-height: 1.8; color: var(--text-primary); }
+.md-content h1 { font-size: 28px; font-weight: 700; margin: 0 0 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light); letter-spacing: -0.02em; }
+.md-content h2 { font-size: 20px; font-weight: 600; margin: 40px 0 16px; letter-spacing: -0.01em; }
+.md-content h3 { font-size: 17px; font-weight: 600; margin: 32px 0 12px; }
+.md-content p { margin-bottom: 20px; color: var(--text-secondary); }
+.md-content strong { color: var(--text-primary); font-weight: 600; }
+.md-content ul, .md-content ol { padding-left: 24px; margin-bottom: 20px; color: var(--text-secondary); }
+.md-content li { margin-bottom: 8px; }
+.md-content blockquote {
+  border-left: 4px solid var(--accent-primary);
+  padding: 16px 24px; background: var(--bg-page);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 24px 0; color: var(--text-primary); font-weight: 500;
+}
+.md-content pre {
+  background: #FAFAFA; border: 1px solid var(--border-light);
+  border-radius: var(--radius-md); padding: 20px; margin: 24px 0;
+  overflow-x: auto; font-size: 13px; font-family: 'Menlo', monospace;
+}
+.md-content code {
+  background: var(--bg-hover); padding: 2px 6px;
+  border-radius: 4px; font-size: 13px; font-family: 'Menlo', monospace;
+  color: #DB2777;
+}
+.md-content pre code { background: none; padding: 0; color: inherit; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+.md-content th { background: var(--bg-page); padding: 12px 16px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border-light); }
+.md-content td { padding: 12px 16px; border-bottom: 1px solid var(--border-light); color: var(--text-secondary); }
+
+/* LOADER & UTILS */
+#loader { display: none; text-align: center; padding: 100px; color: var(--text-secondary); }
+.spinner { width: 40px; height: 40px; border: 3px solid var(--border-light); border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent-primary); width: 0; z-index: 1000; transition: width 0.1s; }
+
+/* NAV ARROWS */
+.ch-nav { display: flex; justify-content: space-between; margin-top: 40px; gap: 20px; }
+.ch-nav-btn {
+  flex: 1; padding: 20px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light); background: var(--bg-surface);
+  cursor: pointer; transition: all 0.2s; display: block; text-decoration: none;
+}
+.ch-nav-btn:hover { border-color: var(--accent-primary); background: var(--bg-hover); }
+.ch-nav-btn.next { text-align: right; }
+.ch-nav-btn .dir { font-size: 12px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+.ch-nav-btn .title { font-size: 15px; color: var(--text-primary); font-weight: 600; }
+
+/* ── EDITOR VIEW ── */
+#md-editor-container {
+  display: none;
+  margin-top: 20px;
+}
+#md-editor {
+  width: 100%;
+  min-height: 500px;
+  padding: 20px;
+  font-family: 'Menlo', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: #FAFAFA;
+  color: var(--text-primary);
+  resize: vertical;
+}
+.header-actions { display: flex; gap: 8px; }
+.btn-primary {
+  background: var(--accent-primary); color: white; border-color: var(--accent-primary);
+}
+.btn-primary:hover { background: var(--accent-hover); color: white; }
+
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #main { margin-left: 0; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .bento-card.large, .bento-card.full { grid-column: 1; }
+  #md-body { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">AI</div>
+    <div class="logo-text">
+      <h1>Design System</h1>
+      <p>Capstone Project v2.0</p>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a class="nav-item active" onclick="showHome()">
+      <span class="icon">⊞</span> Dashboard
+    </a>
+    <div class="nav-section">Documentation</div>
+    <a class="nav-item" onclick="loadChapter(0)"><span class="icon">📄</span> Front Matter</a>
+    <a class="nav-item" onclick="loadChapter(1)"><span class="icon">01</span> Introduction</a>
+    <a class="nav-item" onclick="loadChapter(2)"><span class="icon">02</span> Lit. Survey</a>
+    <a class="nav-item" onclick="loadChapter(3)"><span class="icon">03</span> System Analysis</a>
+    <a class="nav-item" onclick="loadChapter(4)"><span class="icon">04</span> System Design</a>
+    <a class="nav-item" onclick="loadChapter(5)"><span class="icon">05</span> Implementation</a>
+    <a class="nav-item" onclick="loadChapter(6)"><span class="icon">06</span> Testing</a>
+    <a class="nav-item" onclick="loadChapter(7)"><span class="icon">07</span> Results</a>
+    <a class="nav-item" onclick="loadChapter(8)"><span class="icon">08</span> Conclusion</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div id="main">
+  <header id="topbar">
+    <div class="breadcrumb">Report / <span id="breadcrumb-text">Dashboard</span></div>
+    <button class="btn" onclick="window.print()">Export PDF</button>
+  </header>
+
+  <main id="content">
+    
+    <!-- DASHBOARD VIEW -->
+    <div id="home-view">
+      <div class="bento-header">
+        <h1>Sentiment & Trend Analysis</h1>
+        <p>A comprehensive design system and architecture report for a real-time social media analytics platform. Built with React, FastAPI, and BERT.</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-card large" onclick="loadChapter(5)">
+          <div class="card-icon">💻</div>
+          <h3>Implementation & Architecture</h3>
+          <p>Explore the scalable technical foundation, covering Next.js frontend, FastAPI backend, and real-time Socket.io WebSockets.</p>
+          <div class="card-meta">Read Chapter 5 →</div>
+        </div>
+        
+        <div class="bento-card" onclick="loadChapter(4)">
+          <div class="card-icon">📐</div>
+          <h3>System Design</h3>
+          <p>UML, DFD, and Entity-Relationship diagrams defining the core data flow.</p>
+          <div class="card-meta">Chapter 4</div>
+        </div>
+
+        <div class="bento-card" onclick="loadChapter(1)">
+          <div class="card-icon">🎯</div>
+          <h3>Project Objectives</h3>
+          <p>Scope, motivation, and the core problems solved by this capstone.</p>
+          <div class="card-meta">Chapter 1</div>
+        </div>
+
+        <div class="bento-card" onclick="loadChapter(3)">
+          <div class="card-icon">⚙️</div>
+          <h3>Requirements</h3>
+          <p>Detailed breakdown of functional (FR-10 Real-Time) and non-functional requirements.</p>
+          <div class="card-meta">Chapter 3</div>
+        </div>
+
+        <div class="bento-card" onclick="loadChapter(7)">
+          <div class="card-icon">📈</div>
+          <h3>Results & Metrics</h3>
+          <p>Model performance evaluation, demonstrating 87.2% accuracy using the BERT ensemble.</p>
+          <div class="card-meta">Chapter 7</div>
+        </div>
+
+        <div class="bento-card full" onclick="loadChapter(8)">
+          <div class="card-icon">🚀</div>
+          <h3>Conclusion & Future Enhancements</h3>
+          <p>Final takeaways, limitations, and future scalability paths including enterprise queuing and automated reporting.</p>
+          <div class="card-meta">Chapter 8 →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="spinner"></div>
+      <p>Rendering document...</p>
+    </div>
+
+    <!-- MARKDOWN VIEW -->
+    <div id="md-view">
+      <div id="md-header">
+        <div>
+          <h2 id="md-title">Title</h2>
+          <p id="md-subtitle">Subtitle</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn" id="btn-edit" onclick="toggleEdit()">Edit Markdown</button>
+          <button class="btn btn-primary" id="btn-save" onclick="saveChanges()" style="display:none">Save Changes</button>
+          <button class="btn" onclick="showHome()">Close</button>
+        </div>
+      </div>
+      <div id="md-body" class="md-content"></div>
+      
+      <div id="md-editor-container">
+        <textarea id="md-editor" spellcheck="false"></textarea>
+      </div>
+      
+      <div class="ch-nav">
+        <a class="ch-nav-btn prev" id="btn-prev" onclick="navigate(-1)" style="display:none">
+          <div class="dir">Previous</div>
+          <div class="title" id="prev-title">Title</div>
+        </a>
+        <a class="ch-nav-btn next" id="btn-next" onclick="navigate(1)" style="display:none">
+          <div class="dir">Next</div>
+          <div class="title" id="next-title">Title</div>
+        </a>
+      </div>
+    </div>
+    
+  </main>
+</div>
+
+<script>
+const chapters = [
+  {file:'00_front_matter.md', title:'Front Matter', subtitle:'Cover, Abstract & Contents'},
+  {file:'01_chapter1_introduction.md', title:'Introduction', subtitle:'Background, Objectives & Scope'},
+  {file:'02_chapter2_literature_survey.md', title:'Literature Survey', subtitle:'Related Works & Gap'},
+  {file:'03_chapter3_system_analysis.md', title:'System Analysis', subtitle:'Requirements & Feasibility'},
+  {file:'04_chapter4_system_design.md', title:'System Design', subtitle:'Architecture & Diagrams'},
+  {file:'05_chapter5_implementation.md', title:'Implementation', subtitle:'Frontend, Backend & Real-time'},
+  {file:'06_chapter6_testing.md', title:'Testing & Validation', subtitle:'Unit, Integration & Performance'},
+  {file:'07_chapter7_results.md', title:'Results & Discussion', subtitle:'Metrics & Evaluation'},
+  {file:'08_chapter8_conclusion_references_appendix.md', title:'Conclusion & References', subtitle:'Final Notes & Appendices'},
+];
+
+let currentChapter = -1;
+let currentMarkdown = "";
+
+function showHome() {
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('md-view').style.display = 'none';
+  document.getElementById('loader').style.display = 'none';
+  document.getElementById('breadcrumb-text').textContent = 'Dashboard';
+  
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[0].classList.add('active');
+  currentChapter = -1;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+async function loadChapter(idx) {
+  currentChapter = idx;
+  const ch = chapters[idx];
+  
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('md-view').style.display = 'none';
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('breadcrumb-text').textContent = ch.title;
+  
+  document.querySelectorAll('.nav-item').forEach((n, i) => n.classList.toggle('active', i === idx + 1));
+  
+  try {
+    const r = await fetch(ch.file);
+    if(!r.ok) throw new Error('File not found on server.');
+    currentMarkdown = await r.text();
+    
+    // Reset edit state
+    document.getElementById('md-body').style.display = 'block';
+    document.getElementById('md-editor-container').style.display = 'none';
+    document.getElementById('btn-edit').style.display = 'block';
+    document.getElementById('btn-save').style.display = 'none';
+    
+    // Parse Markdown safely
+    if (typeof marked !== 'undefined') {
+      document.getElementById('md-body').innerHTML = marked.parse(currentMarkdown);
+    } else {
+      throw new Error('Markdown parser (marked.js) failed to load. Please check internet connection.');
+    }
+    
+    // Syntax highlight
+    if (typeof hljs !== 'undefined') {
+      document.getElementById('md-body').querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+    }
+    
+    document.getElementById('md-title').textContent = ch.title;
+    document.getElementById('md-subtitle').textContent = ch.subtitle;
+    
+    // Nav buttons
+    const prev = document.getElementById('btn-prev');
+    const next = document.getElementById('btn-next');
+    
+    if(idx > 0) { prev.style.display = 'block'; document.getElementById('prev-title').textContent = chapters[idx-1].title; } else { prev.style.display = 'none'; }
+    if(idx < chapters.length-1) { next.style.display = 'block'; document.getElementById('next-title').textContent = chapters[idx+1].title; } else { next.style.display = 'none'; }
+    
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('md-view').style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    
+  } catch(e) {
+    document.getElementById('loader').innerHTML = `<p style="color:#ef4444; font-weight: 500;">❌ Could not load chapter.</p><p style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;">Error: ${e.message}</p>`;
+  }
+}
+
+function navigate(dir) {
+  if (currentChapter + dir >= 0 && currentChapter + dir < chapters.length) {
+    loadChapter(currentChapter + dir);
+  }
+}
+
+function toggleEdit() {
+  const isEditing = document.getElementById('md-editor-container').style.display === 'block';
+  if (isEditing) {
+    // Cancel editing
+    document.getElementById('md-editor-container').style.display = 'none';
+    document.getElementById('md-body').style.display = 'block';
+    document.getElementById('btn-save').style.display = 'none';
+    document.getElementById('btn-edit').textContent = 'Edit Markdown';
+  } else {
+    // Start editing
+    document.getElementById('md-editor').value = currentMarkdown;
+    document.getElementById('md-body').style.display = 'none';
+    document.getElementById('md-editor-container').style.display = 'block';
+    document.getElementById('btn-edit').textContent = 'Cancel Edit';
+    document.getElementById('btn-save').style.display = 'block';
+  }
+}
+
+async function saveChanges() {
+  const newMarkdown = document.getElementById('md-editor').value;
+  const ch = chapters[currentChapter];
+  
+  // Download file to disk
+  const blob = new Blob([newMarkdown], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ch.file;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  
+  currentMarkdown = newMarkdown;
+  document.getElementById('md-body').innerHTML = marked.parse(currentMarkdown);
+  if (typeof hljs !== 'undefined') {
+    document.getElementById('md-body').querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+  }
+  
+  toggleEdit();
+  alert('Changes applied! A file download has started to overwrite your local .md file.');
+}
+
+window.addEventListener('scroll', () => {
+  const p = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress').style.width = Math.min(p, 100) + '%';
+});
+</script>
+</body>
+</html>
