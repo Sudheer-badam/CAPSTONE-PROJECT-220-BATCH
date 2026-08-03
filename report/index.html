@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-light.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ── DESIGN TOKENS ── */
 :root {
@@ -509,32 +510,105 @@ function navigate(dir) {
   }
 }
 
+function getPdfStyles() {
+  return `
+    body { font-family: 'Inter', Arial, sans-serif; color: #111827; line-height: 1.8; font-size: 13px; }
+    h1 { font-size: 22px; font-weight: 700; border-bottom: 2px solid #4F46E5; padding-bottom: 10px; margin: 0 0 20px; color: #1e1b4b; }
+    h2 { font-size: 17px; font-weight: 600; color: #1e1b4b; margin: 30px 0 12px; }
+    h3 { font-size: 14px; font-weight: 600; color: #374151; margin: 20px 0 8px; }
+    p  { margin-bottom: 14px; color: #374151; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 12px; }
+    th { background: #EEF2FF; padding: 8px 12px; text-align: left; font-weight: 600; border: 1px solid #c7d2fe; }
+    td { padding: 8px 12px; border: 1px solid #e5e7eb; color: #4B5563; }
+    ul, ol { padding-left: 20px; margin-bottom: 14px; color: #4B5563; }
+    li { margin-bottom: 5px; }
+    code { background: #f3f4f6; padding: 2px 5px; border-radius: 3px; font-size: 12px; font-family: monospace; color: #be185d; }
+    pre  { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 14px; font-size: 11px; overflow-x: auto; }
+    hr   { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
+    blockquote { border-left: 4px solid #4F46E5; padding: 10px 16px; background: #f5f3ff; margin: 16px 0; border-radius: 0 6px 6px 0; }
+    .cover { text-align:center; padding: 60px 40px; border-bottom: 2px solid #4F46E5; margin-bottom: 40px; }
+    .cover h1 { border:none; font-size: 26px; color: #1e1b4b; }
+    .cover .subtitle { font-size: 14px; color: #4B5563; margin-top: 8px; }
+    .cover .badge { display:inline-block; background:#4F46E5; color:white; padding:6px 18px; border-radius:20px; font-size:12px; font-weight:600; margin-top:16px; }
+    .chapter-break { page-break-before: always; margin-top: 40px; }
+  `;
+}
+
+function buildCoverHtml() {
+  return `
+    <div class="cover">
+      <h1>AI-Based Social Media Sentiment and Trend Analysis Platform</h1>
+      <div class="subtitle">Final Year B.Tech Capstone Project Report</div>
+      <div class="badge">Batch 220 | KL University | 2026–27</div>
+      <br/><br/>
+      <table style="margin:0 auto; width:auto; font-size:13px;">
+        <tr><th>Student Name</th><th>Roll Number</th></tr>
+        <tr><td>KOKKILIGADDA TULASI VENKATA DURGA</td><td>2300032267</td></tr>
+        <tr><td>BADAM SUDHEER REDDY</td><td>2300033278</td></tr>
+        <tr><td>GARIKAPATI SATYA KARTHIKA</td><td>2300030988</td></tr>
+        <tr><td>MITTA KAVYA NAYANA</td><td>2300033848</td></tr>
+        <tr><td>INTI HANITHA SAI GAYATHRI</td><td>2300032512</td></tr>
+      </table>
+      <br/>
+      <div class="subtitle"><strong>Guide:</strong> Mr. M. Subba Rao &nbsp;|&nbsp; Dept. of CSE, KL University</div>
+    </div>
+  `;
+}
+
 function downloadChapter() {
   if (currentChapter < 0 || !currentMarkdown) return;
   const ch = chapters[currentChapter];
-  const blob = new Blob([currentMarkdown], { type: 'text/markdown' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = ch.file;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const btn = document.getElementById('btn-download-ch');
+  btn.textContent = 'Generating PDF...';
+  btn.disabled = true;
+
+  const html = `<style>${getPdfStyles()}</style><div>${marked.parse(currentMarkdown)}</div>`;
+  const el = document.createElement('div');
+  el.innerHTML = html;
+
+  html2pdf().set({
+    margin: [15, 15, 15, 15],
+    filename: `Batch220_${ch.title.replace(/\s+/g,'_')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(el).save().then(() => {
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Chapter`;
+    btn.disabled = false;
+  });
 }
 
 async function downloadAllChapters() {
-  let fullReport = `# AI-Based Social Media Sentiment and Trend Analysis Platform\nCapstone Project — Batch 220 | Academic Year 2026–27\n\n`;
-  for (const ch of chapters) {
+  const btn = document.querySelector('[onclick="downloadAllChapters()"]');
+  btn.textContent = 'Preparing PDF...';
+  btn.disabled = true;
+
+  let bodyHtml = buildCoverHtml();
+  for (let i = 0; i < chapters.length; i++) {
+    const ch = chapters[i];
     try {
       const r = await fetch(ch.file);
       const text = await r.text();
-      fullReport += `\n\n---\n\n` + text;
+      const divClass = i === 0 ? '' : 'chapter-break';
+      bodyHtml += `<div class="${divClass}">${marked.parse(text)}</div>`;
     } catch(e) { /* skip */ }
   }
-  const blob = new Blob([fullReport], { type: 'text/markdown' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'Capstone_Report_Batch220_Full.md';
-  a.click();
-  URL.revokeObjectURL(a.href);
+
+  const el = document.createElement('div');
+  el.innerHTML = `<style>${getPdfStyles()}</style>` + bodyHtml;
+
+  html2pdf().set({
+    margin: [15, 15, 15, 15],
+    filename: 'Capstone_Report_Batch220_Full.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(el).save().then(() => {
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Report`;
+    btn.disabled = false;
+  });
 }
 
 function toggleEdit() {
