@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<!-- FIREBASE AUTH GUARD -->
+<!-- FIREBASE AUTH GUARD & DATABASE -->
 <script type="module">
   import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey:            "AIzaSyARQOk-L_G0hxtuwddfcnpoxbPTnRMtUno",
@@ -20,6 +21,10 @@
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // Expose to global scope for the rest of the app
+  window.firebaseDB = { db, doc, getDoc, setDoc };
 
   onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -519,9 +524,22 @@ async function loadChapter(idx) {
   document.querySelectorAll('.nav-item').forEach((n, i) => n.classList.toggle('active', i === idx + 1));
   
   try {
-    const r = await fetch(ch.file);
-    if(!r.ok) throw new Error('File not found on server.');
-    currentMarkdown = await r.text();
+    // 1. Try to fetch from Firebase Backend Database
+    if (window.firebaseDB) {
+      const { db, doc, getDoc } = window.firebaseDB;
+      const docRef = doc(db, "chapters", ch.file);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        currentMarkdown = docSnap.data().content;
+      }
+    }
+
+    // 2. Fallback to local markdown file if not in DB
+    if (!currentMarkdown) {
+      const r = await fetch(ch.file);
+      if(!r.ok) throw new Error('File not found on server.');
+      currentMarkdown = await r.text();
+    }
     
     // Reset edit state
     document.getElementById('md-body').style.display = 'block';
@@ -686,25 +704,40 @@ function toggleEdit() {
 }
 
 async function saveChanges() {
-  const newMarkdown = document.getElementById('md-editor').value;
-  const ch = chapters[currentChapter];
-  
-  // Download file to disk
-  const blob = new Blob([newMarkdown], { type: 'text/markdown' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = ch.file;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  
-  currentMarkdown = newMarkdown;
-  document.getElementById('md-body').innerHTML = marked.parse(currentMarkdown);
-  if (typeof hljs !== 'undefined') {
-    document.getElementById('md-body').querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+  const btn = document.getElementById('btn-save');
+  const originalText = btn.textContent;
+  btn.textContent = 'Saving to Database...';
+  btn.disabled = true;
+
+  try {
+    const newMarkdown = document.getElementById('md-editor').value;
+    const ch = chapters[currentChapter];
+    
+    // Save to Firebase Database
+    if (window.firebaseDB) {
+      const { db, doc, setDoc } = window.firebaseDB;
+      const docRef = doc(db, "chapters", ch.file);
+      await setDoc(docRef, {
+        content: newMarkdown,
+        updatedBy: sessionStorage.getItem('capstone_user') || 'Unknown',
+        updatedAt: new Date().toISOString()
+      });
+    }
+    
+    currentMarkdown = newMarkdown;
+    document.getElementById('md-body').innerHTML = marked.parse(currentMarkdown);
+    if (typeof hljs !== 'undefined') {
+      document.getElementById('md-body').querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+    }
+    
+    toggleEdit();
+    alert('✅ Changes successfully saved to the cloud database!');
+  } catch (error) {
+    alert('❌ Failed to save to database. Error: ' + error.message);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
   }
-  
-  toggleEdit();
-  alert('Changes applied! A file download has started to overwrite your local .md file.');
 }
 
 window.addEventListener('scroll', () => {
