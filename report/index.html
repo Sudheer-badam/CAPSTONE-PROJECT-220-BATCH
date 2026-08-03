@@ -3,6 +3,38 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<!-- FIREBASE AUTH GUARD -->
+<script type="module">
+  import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyARQOk-L_G0hxtuwddfcnpoxbPTnRMtUno",
+    authDomain:        "capstone-batch-220.firebaseapp.com",
+    projectId:         "capstone-batch-220",
+    storageBucket:     "capstone-batch-220.firebasestorage.app",
+    messagingSenderId: "6386291212",
+    appId:             "1:6386291212:web:8acc51863603a9a3d81429",
+    measurementId:     "G-XV9HTK9TMM"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.replace('login.html');
+    } else {
+      const greetEl = document.getElementById('user-greeting');
+      if (greetEl) greetEl.textContent = '\u{1F464} ' + (user.displayName || user.email);
+    }
+  });
+
+  window.logout = async function() {
+    await signOut(auth);
+    window.location.href = 'login.html';
+  };
+</script>
 <title>Capstone Project 220 — AI Sentiment & Trend Analysis | KL University</title>
 <link rel="icon" type="image/png" href="favicon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -320,6 +352,10 @@ body {
 <div id="main">
   <header id="topbar">
     <div class="breadcrumb">Report / <span id="breadcrumb-text">Dashboard</span></div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span id="user-greeting" style="font-size:13px; color:var(--text-secondary); font-weight:500;"></span>
+      <button class="btn" onclick="logout()" style="padding:6px 14px; font-size:13px;">⏻ Logout</button>
+    </div>
   </header>
 
   <main id="content">
