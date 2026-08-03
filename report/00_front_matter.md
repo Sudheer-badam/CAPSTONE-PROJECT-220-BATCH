@@ -17,14 +17,15 @@
 
 | Student Name | Roll Number |
 | :--- | :--- |
-| **[Student 1 Name]** | **[Roll No. 1]** |
-| **[Student 2 Name]** | **[Roll No. 2]** |
-| **[Student 3 Name]** | **[Roll No. 3]** |
-| **[Student 4 Name]** | **[Roll No. 4]** |
+| **KOKKILIGADDA TULASI VENKATA DURGA** | **23300332267** |
+| **BADAM SUDHEER REDDY** | **23300332278** |
+| **GARIKAPATI SATYA KARTHIKA** | **23300330968** |
+| **MITTA KAVYA NAYANA** | **23300338848** |
+| **INTI HANITHA SAI GAYATHRI** | **23300332512** |
 
 **Department of Computer Science and Engineering**
-**[College Name], [University Name]**
-**[City], [State] – [PIN Code]**
+**KL University, Koneru Lakshmaiah Education Foundation**
+**Guntur, Andhra Pradesh – 522302**
 
 **Academic Year: 2024–2025**
 
@@ -32,17 +33,17 @@
 
 **Under the Guidance of:**
 
-**[Guide Name]**
-**Assistant Professor / Associate Professor**
+**Mr. M. Subba Rao**
+**Assistant Professor**
 **Department of Computer Science and Engineering**
-**[College Name]**
+**KL University**
 
 ---
 
 ## DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
-## [COLLEGE NAME]
-## [UNIVERSITY NAME]
-## [YEAR]
+## KL UNIVERSITY
+## KONERU LAKSHMAIAH EDUCATION FOUNDATION
+## 2024–2025
 
 ---
 
@@ -50,7 +51,7 @@
 
 # CERTIFICATE
 
-This is to certify that the project report entitled **"AI-Based Social Media Sentiment and Trend Analysis Platform"** submitted by **[Student 1 Name]** (Roll No.: [Roll No. 1]), **[Student 2 Name]** (Roll No.: [Roll No. 2]), **[Student 3 Name]** (Roll No.: [Roll No. 3]), and **[Student 4 Name]** (Roll No.: [Roll No. 4]), in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering** from **[University Name]**, is a record of bonafide work carried out under my supervision and guidance during the academic year 2024–2025.
+This is to certify that the project report entitled **"AI-Based Social Media Sentiment and Trend Analysis Platform"** submitted by **KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 23300332267), **BADAM SUDHEER REDDY** (Roll No.: 23300332278), **GARIKAPATI SATYA KARTHIKA** (Roll No.: 23300330968), **MITTA KAVYA NAYANA** (Roll No.: 23300338848), and **INTI HANITHA SAI GAYATHRI** (Roll No.: 23300332512), in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering** from **KL University (Koneru Lakshmaiah Education Foundation)**, is a record of bonafide work carried out under my supervision and guidance during the academic year 2024–2025.
 
 The project work described in this report is original and has not been submitted elsewhere for the award of any other degree or diploma.
 
@@ -58,13 +59,13 @@ The project work described in this report is original and has not been submitted
 
 **Project Guide:**
 
-Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+Name: **Mr. M. Subba Rao**
 
-Designation: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+Designation: Assistant Professor
 
 Department: Computer Science and Engineering
 
-Institution: [College Name]
+Institution: KL University
 
 Signature: \_\_\_\_\_\_\_\_\_\_\_\_\_\_ Date: \_\_\_\_\_\_\_\_\_\_
 
@@ -94,7 +95,7 @@ Signature: \_\_\_\_\_\_\_\_\_\_\_\_\_ Date: \_\_\_\_\_\_\_\_\_\_
 
 # DECLARATION
 
-We hereby declare that the project report entitled **"AI-Based Social Media Sentiment and Trend Analysis Platform"** submitted to **[University Name]** in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering** is our original work. The project has been carried out under the guidance of **[Guide Name]**, Department of Computer Science and Engineering, [College Name].
+We hereby declare that the project report entitled **"AI-Based Social Media Sentiment and Trend Analysis Platform"** submitted to **KL University (Koneru Lakshmaiah Education Foundation)** in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering** is our original work. The project has been carried out under the guidance of **Mr. M. Subba Rao**, Department of Computer Science and Engineering, KL University.
 
 We further declare that this project has not been submitted, either in part or in full, for the award of any other degree or diploma at this or any other institution or university.
 
@@ -102,13 +103,14 @@ All sources of information, references, and literature used in this project have
 
 ---
 
-**[Student 1 Name]** (Roll No.: [Roll No. 1])  
-**[Student 2 Name]** (Roll No.: [Roll No. 2])  
-**[Student 3 Name]** (Roll No.: [Roll No. 3])  
-**[Student 4 Name]** (Roll No.: [Roll No. 4])  
+**KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 23300332267)  
+**BADAM SUDHEER REDDY** (Roll No.: 23300332278)  
+**GARIKAPATI SATYA KARTHIKA** (Roll No.: 23300330968)  
+**MITTA KAVYA NAYANA** (Roll No.: 23300338848)  
+**INTI HANITHA SAI GAYATHRI** (Roll No.: 23300332512)  
 
 Department of CSE  
-[College Name]
+KL University
 
 Date: \_\_\_\_\_\_\_\_\_\_
 
@@ -122,9 +124,9 @@ Place: \_\_\_\_\_\_\_\_\_\_
 
 The completion of this project would not have been possible without the support, guidance, and encouragement of several individuals, and we take this opportunity to express our sincere gratitude to each of them.
 
-First and foremost, we would like to thank our project guide, **[Guide Name]**, for the unwavering support and technical direction provided throughout the course of this project. The insightful discussions, constructive feedback during review meetings, and patience in clarifying doubts related to natural language processing and machine learning significantly shaped the direction of this work.
+First and foremost, we would like to thank our project guide, **Mr. M. Subba Rao**, Assistant Professor, Department of Computer Science and Engineering, KL University, for the unwavering support and technical direction provided throughout the course of this project. The insightful discussions, constructive feedback during review meetings, and patience in clarifying doubts related to natural language processing and machine learning significantly shaped the direction of this work.
 
-We extend our heartfelt gratitude to **[HOD Name]**, Head of the Department of Computer Science and Engineering, [College Name], for providing a supportive academic environment and for ensuring that the necessary infrastructure and laboratory facilities were available throughout the project period.
+We extend our heartfelt gratitude to the Head of the Department of Computer Science and Engineering, KL University, for providing a supportive academic environment and for ensuring that the necessary infrastructure and laboratory facilities were available throughout the project period.
 
 We are grateful to the entire faculty of the Department of Computer Science and Engineering for their continuous academic support and for instilling a strong foundation in core computer science subjects that proved essential during this project's implementation.
 
@@ -136,10 +138,11 @@ Finally, we express deep gratitude to our families for their constant encouragem
 
 ---
 
-**[Student 1 Name]** (Roll No.: [Roll No. 1])  
-**[Student 2 Name]** (Roll No.: [Roll No. 2])  
-**[Student 3 Name]** (Roll No.: [Roll No. 3])  
-**[Student 4 Name]** (Roll No.: [Roll No. 4])
+**KOKKILIGADDA TULASI VENKATA DURGA** (Roll No.: 23300332267)  
+**BADAM SUDHEER REDDY** (Roll No.: 23300332278)  
+**GARIKAPATI SATYA KARTHIKA** (Roll No.: 23300330968)  
+**MITTA KAVYA NAYANA** (Roll No.: 23300338848)  
+**INTI HANITHA SAI GAYATHRI** (Roll No.: 23300332512)
 
 ---
 
