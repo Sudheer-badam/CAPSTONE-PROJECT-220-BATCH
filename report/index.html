@@ -387,10 +387,13 @@ body {
 
     <!-- MARKDOWN VIEW -->
     <div id="md-view">
-      <div id="md-header">
-        <div>
-          <h2 id="md-title">Title</h2>
-          <p id="md-subtitle">Subtitle</p>
+      <div id="md-header" style="align-items: flex-start;">
+        <div style="display:flex; align-items:flex-start; gap:16px; flex:1;">
+          <button class="btn" onclick="showHome()" style="padding: 8px 12px; margin-top:2px;">← Back</button>
+          <div>
+            <h2 id="md-title">Title</h2>
+            <p id="md-subtitle">Subtitle</p>
+          </div>
         </div>
         <div class="header-actions">
           <button class="btn btn-download" id="btn-download-ch" onclick="downloadChapter()">
@@ -399,7 +402,6 @@ body {
           </button>
           <button class="btn" id="btn-edit" onclick="toggleEdit()">Edit Markdown</button>
           <button class="btn btn-primary" id="btn-save" onclick="saveChanges()" style="display:none">Save Changes</button>
-          <button class="btn" onclick="showHome()">← Back</button>
         </div>
       </div>
       <div id="md-body" class="md-content"></div>
