@@ -31,7 +31,14 @@
       window.location.replace('login.html');
     } else {
       const greetEl = document.getElementById('user-greeting');
-      if (greetEl) greetEl.textContent = '\u{1F464} ' + (user.displayName || user.email);
+      if (greetEl) {
+        const name = user.displayName || user.email;
+        if (user.photoURL) {
+          greetEl.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"> <span>${name}</span>`;
+        } else {
+          greetEl.innerHTML = `<span>👤 ${name}</span>`;
+        }
+      }
     }
   });
 
@@ -358,7 +365,7 @@ body {
   <header id="topbar">
     <div class="breadcrumb">Report / <span id="breadcrumb-text">Dashboard</span></div>
     <div style="display:flex; align-items:center; gap:12px;">
-      <span id="user-greeting" style="font-size:13px; color:var(--text-secondary); font-weight:500;"></span>
+      <span id="user-greeting" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); font-weight:500;"></span>
       <button class="btn" onclick="logout()" style="padding:6px 14px; font-size:13px;">⏻ Logout</button>
     </div>
   </header>
