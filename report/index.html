@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<!-- AUTH GUARD -->
+<script>
+  if (sessionStorage.getItem('capstone_auth') !== 'true') {
+    window.location.replace('login.html');
+  }
+</script>
 <title>Capstone Project 220 — AI Sentiment & Trend Analysis | KL University</title>
 <link rel="icon" type="image/png" href="favicon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -320,6 +326,10 @@ body {
 <div id="main">
   <header id="topbar">
     <div class="breadcrumb">Report / <span id="breadcrumb-text">Dashboard</span></div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span id="user-greeting" style="font-size:13px; color:var(--text-secondary); font-weight:500;"></span>
+      <button class="btn" onclick="logout()" style="padding:6px 14px; font-size:13px;">⏻ Logout</button>
+    </div>
   </header>
 
   <main id="content">
@@ -441,6 +451,20 @@ const chapters = [
   {file:'07_chapter7_results.md', title:'Results & Discussion', subtitle:'Metrics & Evaluation'},
   {file:'08_chapter8_conclusion_references_appendix.md', title:'Conclusion & References', subtitle:'Final Notes & Appendices'},
 ];
+
+// Auth helpers
+function logout() {
+  sessionStorage.removeItem('capstone_auth');
+  sessionStorage.removeItem('capstone_user');
+  window.location.href = 'login.html';
+}
+
+// Show username in topbar
+(function initUser() {
+  const user = sessionStorage.getItem('capstone_user') || 'User';
+  const el = document.getElementById('user-greeting');
+  if (el) el.textContent = '👤 ' + user;
+})();
 
 let currentChapter = -1;
 let currentMarkdown = "";
