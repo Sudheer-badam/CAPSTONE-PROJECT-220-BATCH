@@ -23,21 +23,41 @@
   const auth = getAuth(app);
   const db   = getFirestore(app);
 
+  // ── AUTHORISED EMAILS (same list as login.html) ──────────────────────────
+  const ALLOWED_EMAILS = new Set([
+    "2300032267@kluniversity.in",  // Kokkiligadda Tulasi Venkata Durga
+    "2300033278@kluniversity.in",  // Badam Sudheer Reddy
+    "2300030988@kluniversity.in",  // Garikapati Satya Karthika
+    "2300033848@kluniversity.in",  // Mitta Kavya Nayana
+    "2300032512@kluniversity.in",  // Inti Hanitha Sai Gayathri
+    "msubbarao@kluniversity.in",   // Mentor – Mr. M. Subba Rao
+  ]);
+
   // Expose to global scope for the rest of the app
   window.firebaseDB = { db, doc, getDoc, setDoc };
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.replace('login.html');
-    } else {
-      const greetEl = document.getElementById('user-greeting');
-      if (greetEl) {
-        const name = user.displayName || user.email;
-        if (user.photoURL) {
-          greetEl.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"> <span>${name}</span>`;
-        } else {
-          greetEl.innerHTML = `<span>👤 ${name}</span>`;
-        }
+      return;
+    }
+
+    const email = (user.email || "").toLowerCase().trim();
+
+    // Second-layer guard: kick out any unauthorised account even on direct URL access
+    if (!ALLOWED_EMAILS.has(email)) {
+      await signOut(auth);
+      window.location.replace('login.html');
+      return;
+    }
+
+    const greetEl = document.getElementById('user-greeting');
+    if (greetEl) {
+      const name = user.displayName || user.email;
+      if (user.photoURL) {
+        greetEl.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"> <span>${name}</span>`;
+      } else {
+        greetEl.innerHTML = `<span>👤 ${name}</span>`;
       }
     }
   });
@@ -521,6 +541,7 @@ function showHome() {
 
 async function loadChapter(idx) {
   currentChapter = idx;
+  currentMarkdown = "";          // ← reset so we always fetch fresh content
   const ch = chapters[idx];
   
   document.getElementById('home-view').style.display = 'none';

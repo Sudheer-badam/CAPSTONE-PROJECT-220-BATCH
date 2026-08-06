@@ -32,23 +32,34 @@
     }
   });
 
+  // ── AUTHORISED EMAILS ONLY ──────────────────────────────────────────────
+  const ALLOWED_EMAILS = new Set([
+    "2300032267@kluniversity.in",  // Kokkiligadda Tulasi Venkata Durga
+    "2300033278@kluniversity.in",  // Badam Sudheer Reddy
+    "2300030988@kluniversity.in",  // Garikapati Satya Karthika
+    "2300033848@kluniversity.in",  // Mitta Kavya Nayana
+    "2300032512@kluniversity.in",  // Inti Hanitha Sai Gayathri
+    "msubbarao@kluniversity.in",   // Mentor – Mr. M. Subba Rao
+  ]);
+
   // Expose Google Login handler globally
   window.firebaseGoogleLogin = async function() {
     const provider = new GoogleAuthProvider();
-    // Force account selection every time
+    // Force account picker every time so users can switch accounts
     provider.setCustomParameters({ prompt: 'select_account' });
-    
+
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
-      // OPTIONAL: If you want to restrict to ONLY @gmail.com or @kluniversity.in domains, uncomment below:
-      /*
-      if (!user.email.endsWith('@gmail.com') && !user.email.endsWith('@kluniversity.in')) {
-        await signOut(auth);
-        throw new Error("Access Denied. Only Gmail / KL University accounts are allowed.");
+      const email = (user.email || "").toLowerCase().trim();
+
+      // ── STRICT ALLOWLIST CHECK ────────────────────────────────────────────
+      if (!ALLOWED_EMAILS.has(email)) {
+        await signOut(auth);   // immediately revoke the session
+        throw new Error(
+          `Access Denied. "${user.email}" is not an authorised Batch 220 account.`
+        );
       }
-      */
 
       sessionStorage.setItem("capstone_user", user.displayName || user.email.split("@")[0]);
       window.location.href = "index.html";
@@ -56,6 +67,7 @@
       if (err.code === 'auth/popup-closed-by-user') {
         throw new Error("Sign-in cancelled.");
       }
+      // Re-throw our own Access Denied errors unchanged
       throw new Error(err.message || "Google Sign-In failed. Please try again.");
     }
   };
@@ -210,7 +222,7 @@
   </form>
 
   <div class="access-note">
-    🔒 <strong>Restricted Access</strong> — Only BATCH 220 team members can log in.
+    🔒 <strong>Restricted Access</strong> — Only the 5 Batch 220 team members &amp; mentor can log in using their <strong>@kluniversity.in</strong> Google account.
   </div>
 
   <div class="card-footer">© 2026 Capstone Project 220 — KL University</div>
