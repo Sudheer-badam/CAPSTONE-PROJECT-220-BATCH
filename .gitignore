@@ -1,0 +1,10 @@
+# Local files — keep on machine, do not push to GitHub
+*.pdf
+CAPSTONE PROJECT LOGO.jpeg
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
