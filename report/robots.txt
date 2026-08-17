@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://capstone-project-220-batch.vercel.app/sitemap.xml
