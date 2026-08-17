@@ -272,8 +272,6 @@
   .interactive-bubble {
     position: fixed;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(99,102,241,0.1));
-    box-shadow: 0 0 10px rgba(99,102,241,0.2), inset 0 0 10px rgba(255,255,255,0.2);
     pointer-events: none;
     z-index: 5;
     transform: translate(-50%, -50%) scale(0);
@@ -365,9 +363,16 @@
       bubble.className = 'interactive-bubble';
       bubble.style.left = `${e.clientX}px`;
       bubble.style.top = `${e.clientY}px`;
+      
       const size = Math.random() * 20 + 10;
       bubble.style.width = `${size}px`;
       bubble.style.height = `${size}px`;
+      
+      // Random rainbow color using HSL
+      const hue = Math.floor(Math.random() * 360);
+      bubble.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), hsla(${hue}, 100%, 60%, 0.4))`;
+      bubble.style.boxShadow = `0 0 15px hsla(${hue}, 100%, 60%, 0.6), inset 0 0 10px rgba(255,255,255,0.5)`;
+      
       document.body.appendChild(bubble);
       
       setTimeout(() => {
