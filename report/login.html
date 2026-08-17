@@ -256,10 +256,39 @@
   }
   .access-note strong { color: #a5b4fc; }
   .card-footer { margin-top: 28px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2); }
+  .watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15vw;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.02);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+  }
+  .interactive-bubble {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(99,102,241,0.1));
+    box-shadow: 0 0 10px rgba(99,102,241,0.2), inset 0 0 10px rgba(255,255,255,0.2);
+    pointer-events: none;
+    z-index: 5;
+    transform: translate(-50%, -50%) scale(0);
+    animation: popBubble 1.5s ease-out forwards;
+  }
+  @keyframes popBubble {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    50% { transform: translate(-50%, calc(-50% - 50px)) scale(1); opacity: 0.8; }
+    100% { transform: translate(-50%, calc(-50% - 100px)) scale(1.2); opacity: 0; }
+  }
 </style>
 </head>
 <body>
 
+<div class="watermark">BATCH 220</div>
 <div class="particles" id="particles"></div>
 
 <div class="login-card">
@@ -325,6 +354,27 @@
     p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*14+10}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.4+0.1};`;
     container.appendChild(p);
   }
+
+  // Interactive Cursor Bubbles
+  let lastBubbleTime = 0;
+  document.addEventListener('mousemove', (e) => {
+    const now = Date.now();
+    if (now - lastBubbleTime > 50 && Math.random() > 0.5) { // Limit bubble creation rate
+      lastBubbleTime = now;
+      const bubble = document.createElement('div');
+      bubble.className = 'interactive-bubble';
+      bubble.style.left = `${e.clientX}px`;
+      bubble.style.top = `${e.clientY}px`;
+      const size = Math.random() * 20 + 10;
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      document.body.appendChild(bubble);
+      
+      setTimeout(() => {
+        bubble.remove();
+      }, 1500);
+    }
+  });
 
   async function triggerLogin(btnId, loginFn) {
     const btn     = document.getElementById(btnId);
