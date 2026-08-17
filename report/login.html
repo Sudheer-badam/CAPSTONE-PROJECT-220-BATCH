@@ -37,8 +37,8 @@
     }
   });
 
-  // ── AUTHORISED EMAILS ONLY ──────────────────────────────────────────────
-  const ALLOWED_EMAILS = new Set([
+  // ── GOOGLE: all 6 (5 members + mentor) ─────────────────────────────────
+  const GOOGLE_ALLOWED_EMAILS = new Set([
     "2300032267@kluniversity.in",  // Kokkiligadda Tulasi Venkata Durga
     "2300033278@kluniversity.in",  // Badam Sudheer Reddy
     "2300030988@kluniversity.in",  // Garikapati Satya Karthika
@@ -47,8 +47,20 @@
     "msubbarao@kluniversity.in",   // Mentor – Mr. M. Subba Rao
   ]);
 
+  // ── MICROSOFT: 5 members only (mentor uses Google login) ────────────────
+  const MICROSOFT_ALLOWED_EMAILS = new Set([
+    "2300032267@kluniversity.in",  // Kokkiligadda Tulasi Venkata Durga
+    "2300033278@kluniversity.in",  // Badam Sudheer Reddy
+    "2300030988@kluniversity.in",  // Garikapati Satya Karthika
+    "2300033848@kluniversity.in",  // Mitta Kavya Nayana
+    "2300032512@kluniversity.in",  // Inti Hanitha Sai Gayathri
+  ]);
+
+  // Combined set used by onAuthStateChanged redirect check
+  const ALLOWED_EMAILS = new Set([...GOOGLE_ALLOWED_EMAILS, ...MICROSOFT_ALLOWED_EMAILS]);
+
   // ── Shared sign-in helper ────────────────────────────────────────────────
-  async function handleProviderSignIn(provider, providerName) {
+  async function handleProviderSignIn(provider, providerName, allowedSet) {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -59,14 +71,14 @@
       const email = rawEmail.toLowerCase().trim();
 
       // ── STRICT ALLOWLIST CHECK ────────────────────────────────────────────
-      if (!ALLOWED_EMAILS.has(email)) {
+      if (!allowedSet.has(email)) {
         await signOut(auth);   // immediately revoke the session
         throw new Error(
-          `Access Denied. "${user.email}" is not an authorised Batch 220 account.`
+          `Access Denied. "${rawEmail || 'unknown'}" is not authorised for ${providerName} login.`
         );
       }
 
-      sessionStorage.setItem("capstone_user", user.displayName || user.email.split("@")[0]);
+      sessionStorage.setItem("capstone_user", user.displayName || rawEmail.split("@")[0]);
       window.location.href = "index.html";
     } catch (err) {
       if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
@@ -87,10 +99,10 @@
     const provider = new GoogleAuthProvider();
     // Force account picker every time so users can switch accounts
     provider.setCustomParameters({ prompt: 'select_account' });
-    await handleProviderSignIn(provider, 'Google');
+    await handleProviderSignIn(provider, 'Google', GOOGLE_ALLOWED_EMAILS);
   };
 
-  // Expose Microsoft Login handler globally
+  // Expose Microsoft Login handler globally (5 members only)
   window.fireMicrosoftLogin = async function() {
     const provider = new OAuthProvider('microsoft.com');
     provider.setCustomParameters({
@@ -101,7 +113,7 @@
     provider.addScope('email');
     provider.addScope('openid');
     provider.addScope('profile');
-    await handleProviderSignIn(provider, 'Microsoft');
+    await handleProviderSignIn(provider, 'Microsoft', MICROSOFT_ALLOWED_EMAILS);
   };
 </script>
 
