@@ -25,10 +25,16 @@
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // Redirect if already logged in
-  onAuthStateChanged(auth, (user) => {
+  // Redirect only if already logged in AND email is authorised
+  // (prevents race condition where onAuthStateChanged fires before allowlist check)
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
-      window.location.href = "index.html";
+      const email = (user.email || "").toLowerCase().trim();
+      if (ALLOWED_EMAILS.has(email)) {
+        window.location.href = "index.html";
+      }
+      // If NOT in allowlist, do nothing here — handleProviderSignIn will sign them out
+      // and show the proper error message on screen
     }
   });
 
