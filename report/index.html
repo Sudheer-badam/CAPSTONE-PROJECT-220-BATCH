@@ -42,7 +42,7 @@
       return;
     }
 
-    const email = (user.email || "").toLowerCase().trim();
+    const email = (user.email || user.providerData?.[0]?.email || "").toLowerCase().trim();
 
     // Second-layer guard: kick out any unauthorised account even on direct URL access
     if (!ALLOWED_EMAILS.has(email)) {
