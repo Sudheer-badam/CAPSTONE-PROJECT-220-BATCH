@@ -29,12 +29,11 @@
   // (prevents race condition where onAuthStateChanged fires before allowlist check)
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const email = (user.email || "").toLowerCase().trim();
+      const rawEmail = user.email || user.providerData?.[0]?.email || "";
+      const email = rawEmail.toLowerCase().trim();
       if (ALLOWED_EMAILS.has(email)) {
         window.location.href = "index.html";
       }
-      // If NOT in allowlist, do nothing here — handleProviderSignIn will sign them out
-      // and show the proper error message on screen
     }
   });
 
@@ -53,7 +52,11 @@
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      const email = (user.email || "").toLowerCase().trim();
+      // user.email can be null for some Microsoft accounts — fall back to providerData
+      const rawEmail = user.email
+        || user.providerData?.[0]?.email
+        || "";
+      const email = rawEmail.toLowerCase().trim();
 
       // ── STRICT ALLOWLIST CHECK ────────────────────────────────────────────
       if (!ALLOWED_EMAILS.has(email)) {
@@ -94,6 +97,10 @@
       prompt: 'select_account',
       tenant: 'common'
     });
+    // Request email scope so Microsoft returns the user's email address
+    provider.addScope('email');
+    provider.addScope('openid');
+    provider.addScope('profile');
     await handleProviderSignIn(provider, 'Microsoft');
   };
 </script>
